@@ -38,7 +38,10 @@ group :development do
 end
 
 group :test do
-  gem "capybara"
+  # gem "capybara"
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+#kmm
+gem 'devise', '~> 4.9'
