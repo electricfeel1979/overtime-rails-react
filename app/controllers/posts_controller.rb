@@ -10,10 +10,14 @@ class PostsController < ApplicationController
 
     def create
         @post = Post.new(post_params)
+        @post.user_id = current_user.id
 
-        @post.save
-
-        redirect_to @post
+        # debugger
+        if @post.save
+            redirect_to @post, notice: 'Your post was created successfully'
+        else
+            render :new
+        end
     end
 
     def show
