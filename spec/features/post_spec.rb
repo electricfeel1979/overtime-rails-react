@@ -5,8 +5,8 @@ describe "navigate" do
         @user = FactoryBot.create(:user)
         login_as(@user, :scope => :user)
     end
-    
-    
+
+
     describe "index" do
         before do
             visit posts_path
@@ -15,7 +15,7 @@ describe "navigate" do
         it 'can be reached successfully' do
             expect(page.status_code).to eq(200)
         end
-    
+
         it 'has a title of Posts' do
             visit posts_path
             expect(page).to have_content(/Posts/)
@@ -32,17 +32,28 @@ describe "navigate" do
     describe "new" do
         it 'has a link from the homepage' do
             visit root_path
-            
+
             click_link 'new_post_from_nav'
             expect(page.status_code).to eq(200)
         end
     end
-    
+
+    describe "delete" do
+        it "can be deleted" do
+           @post = FactoryBot.create(:post)
+           visit posts_path
+
+           click_link "delete_post_#{@post.id}_from_index"
+           expect(page.status_code).to eq(200)
+        end
+    end
+
+
     describe "creation" do
         before do
-            visit new_post_path            
+            visit new_post_path
         end
-        
+
         it 'has a form that can be reached' do
             expect(page.status_code).to eq(200)
         end
@@ -72,7 +83,7 @@ describe "navigate" do
 
         it 'can be reached by clicking edit on edit page' do
             visit posts_path
-            
+
             click_link "edit_#{@post.id}"
             expect(page.status_code).to eq(200)
         end
