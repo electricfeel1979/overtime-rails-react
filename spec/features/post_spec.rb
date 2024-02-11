@@ -27,6 +27,17 @@ describe "navigate" do
             visit posts_path
             expect(page).to have_content(/Rationale|Content/)
         end
+
+        it 'has a scope so that only post creators can see their posts' do
+            FactoryBot.create(:post, user: @user)
+            FactoryBot.create(:post, user: @user)
+
+            non_authorized_user = FactoryBot.create(:non_authorized_user)
+            FactoryBot.create(:post_from_other_user, rationale: "This post shouldn't be seen", user: non_authorized_user)
+
+            visit posts_path
+            expect(page).to_not have_content("This post shouldn't be seen")
+        end
     end
 
     describe "new" do
@@ -40,7 +51,7 @@ describe "navigate" do
 
     describe "delete" do
         it "can be deleted" do
-           @post = FactoryBot.create(:post)
+           @post = FactoryBot.create(:post, user: @user)
            visit posts_path
 
            click_link "delete_post_#{@post.id}_from_index"
