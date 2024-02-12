@@ -4,7 +4,7 @@ describe "navigate" do
     let(:user) { FactoryBot.create(:user) }
 
     let(:post) {
-        FactoryBot.create(:post, user_id: user.id)
+        FactoryBot.create(:post, user: user)
     }
 
     before do
@@ -81,6 +81,7 @@ describe "navigate" do
         it 'will have a user association with' do
             fill_in 'post[date]', with: Date.today
             fill_in 'post[rationale]', with: 'User Association'
+            fill_in 'post[overtime_request]', with: 4.5
             click_on 'Save'
 
             expect(User.last.posts.last.rationale).to eq('User Association')
