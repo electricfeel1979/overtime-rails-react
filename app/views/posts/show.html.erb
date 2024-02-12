@@ -1,1 +1,21 @@
-<%= @post.inspect %>
+<div class="card mb-3">
+  <div class="card-body">
+    <h2 class="card-title"><%= @post.rationale %></h2>
+
+    <div class="mb-2">
+      <h3 class="h5"><span>Overtime Amount Requested:</span> <%= @post.overtime_request %></h3>
+    </div>
+
+    <div class="mb-2">
+      <h3 class="h5"><span>Employee:</span> <%= @post.user.full_name %></h3>
+    </div>
+
+    <div class="mb-2">
+      <h3 class="h5"><span>Date:</span> <%= @post.date %></h3>
+    </div>
+
+    <div class="mb-2">
+      <h3 class="h5"><span>Current Stage of Approval:</span> <%= @post.status %></h3>
+    </div>
+  </div>
+</div>
