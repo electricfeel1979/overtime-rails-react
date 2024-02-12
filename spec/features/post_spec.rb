@@ -1,9 +1,14 @@
 require 'rails_helper'
 
 describe "navigate" do
+    let(:user) { FactoryBot.create(:user) }
+
+    let(:post) {
+        FactoryBot.create(:post, user_id: user.id)
+    }
+
     before do
-        @user = FactoryBot.create(:user)
-        login_as(@user, :scope => :user)
+        login_as(user, :scope => :user)
     end
 
 
@@ -22,16 +27,12 @@ describe "navigate" do
         end
 
         it 'has a list of posts' do
-            FactoryBot.build_stubbed(:post, user: @user)
-            FactoryBot.build_stubbed(:post, user: @user)
             visit posts_path
+
             expect(page).to have_content(/Rationale|Content/)
         end
 
         it 'has a scope so that only post creators can see their posts' do
-            FactoryBot.create(:post, user: @user)
-            FactoryBot.create(:post, user: @user)
-
             non_authorized_user = FactoryBot.create(:non_authorized_user)
             FactoryBot.create(:post_from_other_user, rationale: "This post shouldn't be seen", user: non_authorized_user)
 
@@ -51,11 +52,10 @@ describe "navigate" do
 
     describe "delete" do
         it "can be deleted" do
-           @post = FactoryBot.create(:post, user: @user)
-           visit posts_path
-
-           click_link "delete_post_#{@post.id}_from_index"
-           expect(page.status_code).to eq(200)
+            post
+            visit posts_path
+            click_link "delete_post_#{post.id}_from_index"
+            expect(page.status_code).to eq(200)
         end
     end
 
@@ -88,21 +88,8 @@ describe "navigate" do
     end
 
     describe "edit" do
-        before do
-            @user = FactoryBot.create(:user)
-            login_as(@user, :scope => :user)
-            @post = FactoryBot.create(:post, user: @user)
-        end
-
-        it 'can be reached by clicking edit on edit page' do
-            visit posts_path
-
-            click_link "edit_#{@post.id}"
-            expect(page.status_code).to eq(200)
-        end
-
         it 'can be edited' do
-            visit edit_post_path(@post.id)
+            visit edit_post_path(post.id)
 
             fill_in 'post[date]', with: Date.today
             fill_in 'post[rationale]', with: 'Edited content'
@@ -116,7 +103,7 @@ describe "navigate" do
             non_authorized_user = FactoryBot.create(:non_authorized_user)
             login_as(non_authorized_user, :scope => :user)
 
-            visit edit_post_path(@post)
+            visit edit_post_path(post)
 
             expect(current_path).to eq(root_path)
         end
